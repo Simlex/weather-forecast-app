@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { fetchWeather } from "./api/fetchWeather";
+import { fetchImage } from "./api/fetchImage";
 import './App.css';
 
 const App = () => {
     const [query, setQuery] = useState('');
     const [weather, setWeather] = useState({});
+    const [image, setImage] = useState();
 
     async function search(e) {
         if (e.key === 'Enter') {
@@ -13,11 +15,15 @@ const App = () => {
             setWeather(data);
             // Reset input field 
             setQuery('');
+            const imgData = await fetchImage(weather.weather[0].description)
+            console.log(imgData.results.links);
+            setImage(imgData.results[0].links.download);
         }
     }
 
     return (
         <div className="main-container">
+        <img className="main-containerImg" src={image} />
             <input type='text' className='search' placeholder='Search...'
                 // The two below are very important in react input 
                 // The value, and onchnage is something from the state 
